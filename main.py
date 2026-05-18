@@ -43,18 +43,52 @@ app= FastAPI()
 
     
     
-class Address(BaseModel):
-    street: str
-    city: str
-    country: str
+# class Address(BaseModel):
+#     street: str
+#     city: str
+#     country: str
+# class User(BaseModel):
+#     name: str
+#     age: int
+#     email: str
+#     address: Address
+    
+# @app.post("/create_user")
+# def create_user(user: User):
+#     return {
+#         "message": "User created successfully",
+#         "user": user}
+
+
+# Path + Query + Request Body
+
+users=[]
+
 class User(BaseModel):
+    id: int
     name: str
     age: int
     email: str
-    address: Address
     
-@app.post("/create_user")
-def create_user(user: User):
+@app.post("/users")
+
+def create_user(user:User):
+    users.append(user)
     return {
         "message": "User created successfully",
-        "user": user}
+        "user": user
+        }
+    
+@app.put("/users/{user_id}")
+def update_user(user_id:int,user:User,notify: bool=False):
+  for user in users:
+      if user.id==user_id:
+          users[user_id]=user
+          
+          return{
+              "message": "User updated",
+              "notify": notify,
+              "user": user
+          }
+      return {"message": "User not found"}
+   
