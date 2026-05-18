@@ -25,3 +25,17 @@ app= FastAPI()
 #     return {"user_id": user_id}
 
 
+# Query Parameter +Optional Query Parameter
+
+
+# @app.get("/users")
+# def get_users(name: str=None, age: int=None):
+#     return {"name": name, "age": age}
+
+
+# @app.get("/products")
+# def get_products(limit:int=10):
+#     return {"limit": limit}
+
+
+
