@@ -41,10 +41,17 @@ app= FastAPI()
 
 # Request Body + Post Api 
 
+    
+    
+class Address(BaseModel):
+    street: str
+    city: str
+    country: str
 class User(BaseModel):
     name: str
     age: int
     email: str
+    address: Address
     
 @app.post("/create_user")
 def create_user(user: User):
