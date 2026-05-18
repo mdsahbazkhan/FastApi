@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI,status
 from pydantic import BaseModel
 
 app= FastAPI()
@@ -62,33 +62,56 @@ app= FastAPI()
 
 # Path + Query + Request Body
 
-users=[]
+# users=[]
 
+# class User(BaseModel):
+#     id: int
+#     name: str
+#     age: int
+#     email: str
+    
+# @app.post("/users")
+
+# def create_user(user:User):
+#     users.append(user)
+#     return {
+#         "message": "User created successfully",
+#         "user": user
+#         }
+    
+# @app.put("/users/{user_id}")
+# def update_user(user_id:int,user:User,notify: bool=False):
+#   for user in users:
+#       if user.id==user_id:
+#           users[user_id]=user
+          
+#           return{
+#               "message": "User updated",
+#               "notify": notify,
+#               "user": user
+#           }
+#       return {"message": "User not found"}
+   
+   
+#    Response Model 
 class User(BaseModel):
     id: int
     name: str
     age: int
     email: str
+    password: str
     
-@app.post("/users")
+    
+class UserResponse(BaseModel):
+    id: int
+    name: str
+    email: str
 
-def create_user(user:User):
-    users.append(user)
+@app.get("/users", response_model=UserResponse)
+def get_user():
     return {
-        "message": "User created successfully",
-        "user": user
-        }
-    
-@app.put("/users/{user_id}")
-def update_user(user_id:int,user:User,notify: bool=False):
-  for user in users:
-      if user.id==user_id:
-          users[user_id]=user
-          
-          return{
-              "message": "User updated",
-              "notify": notify,
-              "user": user
-          }
-      return {"message": "User not found"}
-   
+        "id": 1,
+        "name": "John Doe",
+        "email": "john.doe@example.com",
+        "password":"123456"
+    }
