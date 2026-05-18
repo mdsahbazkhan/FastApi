@@ -1,6 +1,6 @@
-# from fastapi import FastAPI
+from fastapi import FastAPI
 
-# app= FastAPI()
+app= FastAPI()
 
 
 # #Home Route
@@ -16,3 +16,12 @@
 # @app.get("/contact")
 # def contact():
 #     return {"message": "This is the contact page"}
+
+
+
+# Path parameter + dynamic route + validation
+# @app.get("/user/{user_id}")
+# def get_user(user_id: int):
+#     return {"user_id": user_id}
+
+
