@@ -1,6 +1,7 @@
 from fastapi import FastAPI,status,HTTPException,Request,Depends,Header
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+import time
 
 app= FastAPI()
 
@@ -156,6 +157,7 @@ app= FastAPI()
 
 
 # Dependency Injection + Depends() + Auth Example
+
 # def current_user():
 #     return {
 #         "name":"Sahbaz"
@@ -175,19 +177,37 @@ app= FastAPI()
 #         "user": user
 #     }
 
-def verify_token(token:str=Header(None)):
-    if token !="mysecrettoken":
-        raise HTTPException(
-            status_code=401,
-            detail="Invalid token"
-        )
-    return {
-        "user":"Authenticated User"
-    }
+# def verify_token(token:str=Header(None)):
+#     if token !="mysecrettoken":
+#         raise HTTPException(
+#             status_code=401,
+#             detail="Invalid token"
+#         )
+#     return {
+#         "user":"Authenticated User"
+#     }
 
-@app.get("/secure-data")
-def get_secure_data(user: dict=Depends(verify_token)):
-    return {
-        "message": "This is secure data",
-        "user": user
-    }
+# @app.get("/secure-data")
+# def get_secure_data(user: dict=Depends(verify_token)):
+#     return {
+#         "message": "This is secure data",
+#         "user": user
+#     }
+
+# Middleware Explained + Logging + Request/Response Flow
+
+@app.middleware("http")
+
+async def log_middleware(request:Request,call_next):
+    start_time= time.time()
+    response= await call_next(request)
+    process_time= time.time()-start_time
+    print(f"Request: {request.method} {request.url.path} - Process Time: {process_time:.4f} seconds")
+    return response
+
+
+# async def my_middleware(request:Request,call_next):
+#     print("Before request")
+#     response= await call_next(request)
+#     print("After request")
+#     return response
