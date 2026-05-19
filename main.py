@@ -1,4 +1,4 @@
-from fastapi import FastAPI,status,HTTPException,Request
+from fastapi import FastAPI,status,HTTPException,Request,Depends,Header
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
 
@@ -134,22 +134,60 @@ app= FastAPI()
 #     }
 
 
-class UserNotFoundException(Exception):
-    def __init__(self,name:str):
-        self.name=name
+# class UserNotFoundException(Exception):
+#     def __init__(self,name:str):
+#         self.name=name
         
-@app.exception_handler(UserNotFoundException)
-def user_not_found_exception_handler(request:Request, exc:UserNotFoundException):
-    return JSONResponse(
-        status_code=404,
-        content={"message": f"User '{exc.name}' not found"}
-    )
+# @app.exception_handler(UserNotFoundException)
+# def user_not_found_exception_handler(request:Request, exc:UserNotFoundException):
+#     return JSONResponse(
+#         status_code=404,
+#         content={"message": f"User '{exc.name}' not found"}
+#     )
     
-@app.get("/users/{name}")
-def get_user(name:str):
-    if name!="John":
-        raise UserNotFoundException(name)
+# @app.get("/users/{name}")
+# def get_user(name:str):
+#     if name!="John":
+#         raise UserNotFoundException(name)
+#     return {
+#         "name": name,
+#         "age": 30
+#     }
+
+
+# Dependency Injection + Depends() + Auth Example
+# def current_user():
+#     return {
+#         "name":"Sahbaz"
+#     }
+    
+# @app.get("/profile")
+# def get_profile(user: dict=Depends(current_user)):
+#         return {
+#             "message": "This is the profile page",
+#             "user": user
+#         }
+        
+# @app.get("/dashboard")
+# def get_dashboard(user: dict=Depends(current_user)):
+#     return {
+#         "message": "This is the dashboard",
+#         "user": user
+#     }
+
+def verify_token(token:str=Header(None)):
+    if token !="mysecrettoken":
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid token"
+        )
     return {
-        "name": name,
-        "age": 30
+        "user":"Authenticated User"
+    }
+
+@app.get("/secure-data")
+def get_secure_data(user: dict=Depends(verify_token)):
+    return {
+        "message": "This is secure data",
+        "user": user
     }
