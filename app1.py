@@ -62,7 +62,6 @@ def create_token(data:dict):
 # Login Api(OAuth2)
 
 @app.post("/login")
-
 def login(form_data:OAuth2PasswordRequestForm=Depends()):
     user=fake_users_db.get(form_data.username)
     if not user or not verify_password(form_data.password,user["hashed_password"]):
